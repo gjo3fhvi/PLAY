@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>熊貓軍團打地鼠遊戲</title>
+  <style>
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 10px;
+      width: 300px;
+      margin: 0 auto;
+      margin-top: 50px;
+    }
+    
+    .game-cell {
+      background-color: lightblue;
+      width: 90px;
+      height: 90px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">熊貓軍團打地鼠遊戲</h1>
+  <div class="game-grid"></div>
+  <button onclick="startGame()">開始遊戲</button>
+  <p id="score"></p>
+
+  <script>
+    var gameGrid = document.querySelector('.game-grid');
+    var scoreDisplay = document.getElementById('score');
+    var score = 0;
+    var timer;
+
+    function startGame() {
+      score = 0;
+      scoreDisplay.textContent = '得分: ' + score;
+      gameGrid.innerHTML = '';
+
+      for (var i = 0; i < 9; i++) {
+        var cell = document.createElement('div');
+        cell.className = 'game-cell';
+        cell.addEventListener('click', handleCellClick);
+        gameGrid.appendChild(cell);
+      }
+
+      setTimeout(function() {
+        timer = setInterval(showRandomPanda, 8000);
+        setTimeout(endGame, 50000);
+      }, 2000);
+    }
+
+    function showRandomPanda() {
+      var cells = Array.from(gameGrid.children);
+      cells.forEach(function(cell) {
+        cell.textContent = '';
+        cell.removeEventListener('click', handleCellClick);
+      });
+
+      var randomIndex = Math.floor(Math.random() * cells.length);
+      cells[randomIndex].textContent = '🐼';
+      cells[randomIndex].addEventListener('click', handleCellClick);
+    }
+
+    function handleCellClick(event) {
+      if (event.target.textContent === '🐼') {
+        score++;
+        event.target.textContent = '';
+        event.target.removeEventListener('click', handleCellClick);
+        scoreDisplay.textContent = '得分: ' + score;
+      }
+    }
+
+    function endGame() {
+      clearInterval(timer);
+      alert('遊戲結束！你的最終得分是: ' + score);
+    }
+  </script>
+</body>
+</html>
